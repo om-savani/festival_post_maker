@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:festival_post_maker/utils/my_extention.dart';
 import 'package:flutter/material.dart';
 import 'package:festival_post_maker/models/festival_models.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class DetailPage extends StatefulWidget {
@@ -169,43 +173,47 @@ class _DetailPageState extends State<DetailPage> {
               ),
               Visibility(
                 visible: isedit,
-                child: Container(
-                  height: 300,
-                  width: double.infinity,
-                  child: Stack(
-                    children: [
-                      Image.network(
-                        selectedImage.isEmpty ? data.images[0] : selectedImage,
-                        fit: BoxFit.cover,
-                        height: 300,
-                        width: double.infinity,
-                      ),
-                      if (selectedQuote.isNotEmpty)
-                        Positioned(
-                          left: textPosition.dx,
-                          top: textPosition.dy,
-                          child: GestureDetector(
-                            onTap: () => textEditor(),
-                            onPanUpdate: (details) {
-                              setState(() {
-                                textPosition += details.delta;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              color: Colors.transparent,
-                              child: Text(
-                                selectedQuote,
-                                style: TextStyle(
-                                  fontSize: textSize,
-                                  color: textcolor,
-                                  fontWeight: FontWeight.bold,
+                child: RepaintBoundary(
+                  child: Container(
+                    height: 300,
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        Image.network(
+                          selectedImage.isEmpty
+                              ? data.images[0]
+                              : selectedImage,
+                          fit: BoxFit.cover,
+                          height: 300,
+                          width: double.infinity,
+                        ),
+                        if (selectedQuote.isNotEmpty)
+                          Positioned(
+                            left: textPosition.dx,
+                            top: textPosition.dy,
+                            child: GestureDetector(
+                              onTap: () => textEditor(),
+                              onPanUpdate: (details) {
+                                setState(() {
+                                  textPosition += details.delta;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                color: Colors.transparent,
+                                child: Text(
+                                  selectedQuote,
+                                  style: TextStyle(
+                                    fontSize: textSize,
+                                    color: textcolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -479,9 +487,7 @@ class _DetailPageState extends State<DetailPage> {
                   heroTag: "btn1",
                   icon: const Icon(Icons.download),
                   label: const Text('Download'),
-                  onPressed: () {
-                    // Add your save logic here
-                  },
+                  onPressed: () {},
                 ),
                 const SizedBox(width: 10),
                 FloatingActionButton.extended(
